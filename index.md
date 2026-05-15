@@ -99,7 +99,7 @@
         
         <div class="btn-group">
             <a href="dows.html" class="btn btn-primary">Windows 下载</a>
-            <a href="dows.md" class="btn btn-outline">macOS / Linux</a>
+            <a href="/dows" class="btn btn-outline">macOS / Linux</a>
         </div>
 
         <img src="https://finalshell-ssh.com/static/picture/finalbg.png" alt="界面预览" class="feature-img">
