@@ -6,7 +6,15 @@
     <title>FinalShell 官方下载 | 业界领先的 SSH 客户端与服务器管理终端</title>
     <meta name="keywords" content="SSH工具, FinalShell下载, Linux服务器管理, 远程桌面, 终端模拟器">
     <meta name="description" content="FinalShell 是一款一体化的服务器网络管理软件，不仅是 SSH 客户端，更是强大的开发运维助手。支持 Windows, macOS, Linux。">
-<style>
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js" defer></script>
+    <script>
+        window.onload = function() {
+            if(window.LA) LA.init({id:"3JTc2JD0CXbQHrsX",ck:"3JTc2JD0CXbQHrsX"});
+        }
+    </script>
+
+    <style>
         :root {
             --bg-deep: #0f172a;
             --bg-main: #1e293b;
@@ -16,55 +24,69 @@
             --white: #ffffff;
         }
 
+        /* 修复白屏关键：强制指定 html 和 body 的背景色 */
+        html { background-color: #0f172a; }
+
         body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background-color: #0f172a; /* 兜底色 */
+            background-color: #0f172a; 
             background-color: var(--bg-deep);
             color: var(--text-main);
             margin: 0;
+            padding: 0;
             line-height: 1.8;
+            overflow-x: hidden;
         }
 
-        a { text-decoration: none; transition: 0.3s; }
+        a { text-decoration: none; transition: 0.3s; color: var(--accent); }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-        header { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        header { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(15, 23, 42, 0.8); }
         .nav-flex { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; color: var(--white); }
         .nav-links a { color: var(--text-dim); margin-left: 25px; font-size: 14px; }
         .nav-links a:hover { color: var(--accent); }
 
+        /* Hero 区域 */
         .hero { text-align: center; padding: 80px 0; background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); }
-        .hero h1 { font-size: 3.5rem; margin-bottom: 10px; color: var(--white); letter-spacing: -1px; }
+        .hero h1 { font-size: 3.5rem; margin: 0 0 10px 0; color: var(--white); letter-spacing: -1px; }
         .hero p { font-size: 1.25rem; color: var(--text-dim); max-width: 700px; margin: 0 auto 40px; }
         
+        /* 下载按钮 */
         .btn-group { display: flex; gap: 20px; justify-content: center; margin-bottom: 50px; }
-        .btn { padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 18px; display: inline-flex; align-items: center; }
+        .btn { padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 18px; display: inline-flex; align-items: center; cursor: pointer; border: none; }
         .btn-primary { background: var(--white); color: var(--bg-deep); }
         .btn-primary:hover { background: var(--accent); color: var(--white); transform: translateY(-2px); }
-        .btn-outline { border: 1px solid rgba(255,255,255,0.2); color: var(--white); }
+        .btn-outline { border: 1px solid rgba(255,255,255,0.2); color: var(--white); background: transparent; }
         .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
 
-        .main-grid { display: grid; grid-template-columns: 1fr 320px; gap: 40px; margin-top: 40px; }
-        .article-content { background: var(--bg-main); padding: 40px; border-radius: 12px; }
+        .main-grid { display: grid; grid-template-columns: 1fr 320px; gap: 40px; margin-top: 40px; padding-bottom: 60px; }
+        
+        .article-content { background: var(--bg-main); padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .article-content h2 { color: var(--white); border-left: 4px solid var(--accent); padding-left: 15px; margin-top: 40px; }
         .article-content p { margin-bottom: 20px; color: #cbd5e1; }
-        .feature-img { width: 100%; border-radius: 8px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); }
+        
+        .feature-img { width: 100%; border-radius: 8px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); display: block; }
+        
         .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
-        .feature-card { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; font-size: 14px; }
+        .feature-card { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; }
+        .feature-card h4 { margin: 0 0 10px 0; color: var(--accent); }
+        .feature-card p { font-size: 14px; margin: 0; }
 
         .sidebar h3 { font-size: 18px; margin-bottom: 20px; color: var(--white); }
-        .post-list { list-style: none; padding: 0; }
+        .post-list { list-style: none; padding: 0; margin: 0; }
         .post-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .post-item a { color: var(--text-main); font-size: 15px; text-decoration: none; }
-        .post-item a:hover { color: var(--accent); }
+        .post-item a { color: var(--text-main); font-size: 15px; text-decoration: none; display: block; }
+        .post-item a:hover { color: var(--accent); padding-left: 5px; }
 
-        footer { text-align: center; padding: 60px 0; color: var(--text-dim); font-size: 14px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
+        footer { text-align: center; padding: 60px 0; color: var(--text-dim); font-size: 14px; border-top: 1px solid rgba(255,255,255,0.05); }
 
         @media (max-width: 850px) {
             .main-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2.5rem; }
             .feature-grid { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; align-items: center; }
+            .btn { width: 80%; justify-content: center; }
         }
     </style>
 </head>
@@ -92,7 +114,7 @@
             <a href="/dows" class="btn btn-outline">macOS / Linux</a>
         </div>
 
-        <img src="https://finalshell-ssh.com/static/picture/finalbg.png" alt="界面预览" class="feature-img">
+        <img src="https://pc1.gtimg.com/guanjia/images/2b/b1/2bb1dee1d6433f1ef0f3a185eeb0d908.jpg" alt="界面预览" class="feature-img">
     </div>
 </section>
 
@@ -119,13 +141,13 @@
 
         <h2>核心特性深度拆解</h2>
         <p>
-            <strong>1. 多平台支持与同步：</strong> 无论你使用的是 Windows 11、macOS 还是各类 Linux 发行版，FinalShell 都能提供一致的体验。其云端同步功能（可选）允许你将成百上千个服务器配置安全地同步到不同设备。
+            <strong>1. 多平台支持与同步：</strong> 无论你使用的是 Windows 11、macOS 还是各类 Linux 发行版，FinalShell 都能提供一致的体验。
         </p>
         <p>
-            <strong>2. 强大的终端模拟器：</strong> 支持配色方案自定义、多标签管理、全局快捷键。对于习惯了 Zsh 或 Fish 的用户，FinalShell 提供了极佳的兼容性支持，确保特殊字符和颜色代码准确渲染。
+            <strong>2. 强大的终端模拟器：</strong> 支持配色方案自定义、多标签管理、全局快捷键。
         </p>
         <p>
-            <strong>3. 命令自动提示与历史：</strong> 运维工作中有大量重复的命令。FinalShell 的历史命令预测功能能够根据你的习惯，智能推荐接下来的操作，极大降低了误操作的风险。
+            <strong>3. 命令自动提示与历史：</strong> 历史命令预测功能能够根据你的习惯，智能推荐接下来的操作，极大降低了误操作的风险。
         </p>
 
         <img src="https://pc1.gtimg.com/guanjia/images/2b/b1/2bb1dee1d6433f1ef0f3a185eeb0d908.jpg" alt="终端特性" class="feature-img">
@@ -134,10 +156,7 @@
         <p>
             在安全性方面，FinalShell 支持 SSH2 协议，兼容密钥对认证、双因素认证（2FA）。所有敏感信息均经过 AES 加密本地存储，确保你的资产万无一失。
         </p>
-        <p>
-            总结来说，如果你需要一个能看清服务器“心跳”、能快速搬运数据、且长得好看的工具，FinalShell 是目前的业界不二之选。
-        </p>
-        </article>
+    </article>
 
     <aside class="sidebar">
         <h3>最新技术动态</h3>
@@ -147,19 +166,20 @@
                 <a href="{{ post.url }}">{{ post.data.title }}</a>
             </li>
             {% else %}
-            <li>暂无内容</li>
+            <li class="post-item">暂无内容</li>
             {% endfor %}
         </ul>
+
         <div style="margin-top:40px; padding:20px; background:var(--accent); color:var(--bg-deep); border-radius:8px;">
-            <strong>订阅更新</strong><br>
-            <small>获取最新安全补丁通知</small>
+            <strong style="display:block; margin-bottom:5px;">订阅更新</strong>
+            <small style="opacity:0.8;">获取最新安全补丁与版本通知</small>
         </div>
     </aside>
 </main>
 
 <footer>
     <div class="container">
-        <p>&copy; 2026 FinalShell SSH. 个人开发者项目。</p>
+        <p>&copy; 2026 FinalShell SSH. 个人开发者项目，由社区驱动支持。</p>
     </div>
 </footer>
 
