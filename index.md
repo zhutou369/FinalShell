@@ -159,7 +159,7 @@
             {% else %}
             </li>
         </ul>
-
+{% endfor %}
         <div style="margin-top:40px; padding:20px; background:var(--accent); color:var(--bg-deep); border-radius:8px;">
             <strong>订阅更新</strong><br>
             <small>获取最新安全补丁通知</small>
