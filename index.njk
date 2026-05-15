@@ -1,0 +1,141 @@
+﻿---
+layout: base.njk
+title: FinalShell 官方下载
+---
+
+<style>
+    /* 强制重置父级容器，防止 11ty 自动生成的容器干扰 */
+    body, html {
+        background-color: #0f172a !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #f1f5f9;
+        overflow-x: hidden;
+    }
+
+    /* 顶部导航锁定 */
+    .site-header {
+        background: #1e293b;
+        padding: 20px 0;
+        border-bottom: 1px solid #334155;
+        width: 100%;
+    }
+
+    /* 主容器限制 */
+    .main-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* 核心修复：英雄区域图片锁死 */
+    .hero-section {
+        text-align: center;
+        padding: 60px 0;
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    }
+
+    /* 强制限制图片大小，解决“越来越大”的问题 */
+    .img-box {
+        display: block;
+        width: 100%;
+        max-width: 800px; /* 这里锁死 800px */
+        margin: 30px auto;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .img-box img {
+        width: 100% !important;
+        height: auto !important;
+        display: block !important;
+        object-fit: contain;
+    }
+
+    /* 按钮样式 */
+    .download-btn {
+        background: #38bdf8;
+        color: #fff;
+        padding: 15px 40px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    /* 文章列表区域 */
+    .layout-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        margin-top: 50px;
+    }
+    
+    .article-body {
+        flex: 1;
+        min-width: 300px;
+        background: #1e293b;
+        padding: 30px;
+        border-radius: 12px;
+    }
+
+    .sidebar {
+        width: 300px;
+    }
+
+    .sidebar a {
+        color: #38bdf8;
+        text-decoration: none;
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+</style>
+
+<header class="site-header">
+    <div class="main-container">
+        <strong style="font-size: 24px;">FinalShell SSH</strong>
+    </div>
+</header>
+
+<section class="hero-section">
+    <div class="main-container">
+        <h1>新一代 SSH 管理工具</h1>
+        <p style="color: #94a3b8; font-size: 1.2rem;">集成终端、文件传输与系统监控</p>
+        
+        <div style="margin: 30px 0;">
+            <a href="#" class="download-btn">Windows 版本下载</a>
+        </div>
+
+        <div class="img-box">
+            <img src="https://pc1.gtimg.com/guanjia/images/2b/b1/2bb1dee1d6433f1ef0f3a185eeb0d908.jpg" alt="FinalShell Preview">
+        </div>
+    </div>
+</section>
+
+<main class="main-container">
+    <div class="layout-grid">
+        <article class="article-body">
+            <h2>为什么选择 FinalShell？</h2>
+            <p>FinalShell 完美融合了 SSH 终端和 SFTP 客户端，支持多平台，提供实时服务器性能监控曲线。</p>
+            <div class="img-box" style="max-width: 100%;">
+                <img src="https://pc1.gtimg.com/guanjia/images/2b/b1/2bb1dee1d6433f1ef0f3a185eeb0d908.jpg" alt="Features">
+            </div>
+        </article>
+
+        <aside class="sidebar">
+            <h3 style="color: #fff;">最新更新</h3>
+            {% for post in collections.blog | reverse %}
+                <a href="{{ post.url }}">{{ post.data.title }}</a>
+            {% else %}
+                <p>暂无内容</p>
+            {% endfor %}
+        </aside>
+    </div>
+</main>
+
+<footer style="text-align: center; padding: 60px 0; color: #64748b; font-size: 14px;">
+    &copy; 2026 FinalShell SSH.
+</footer>
