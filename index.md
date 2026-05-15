@@ -98,7 +98,7 @@
         <p>FinalShell 不仅仅是一个 SSH 客户端，它是集终端模拟、系统监控、文件管理于一体的高性能运维平台。</p>
         
         <div class="btn-group">
-            <a href="dows.html" class="btn btn-primary">Windows 下载</a>
+            <a href="/dows" class="btn btn-primary">Windows 下载</a>
             <a href="/dows" class="btn btn-outline">macOS / Linux</a>
         </div>
 
@@ -152,14 +152,14 @@
     <aside class="sidebar">
         <h3>最新技术动态</h3>
         <ul class="post-list">
- 
-
-            {% for post in collections.blog | reverse %}
-            <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
-            {% else %}
-            </li>
-        </ul>
-{% endfor %}
+    {% for post in collections.blog | reverse %}
+    <li class="post-item">
+        <a href="{{ post.url }}">{{ post.data.title }}</a>
+    </li>
+    {% else %}
+    <li>暂无文章更新</li>
+    {% endfor %}
+</ul>
         <div style="margin-top:40px; padding:20px; background:var(--accent); color:var(--bg-deep); border-radius:8px;">
             <strong>订阅更新</strong><br>
             <small>获取最新安全补丁通知</small>
