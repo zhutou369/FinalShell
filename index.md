@@ -6,11 +6,11 @@
     <title>FinalShell 官方下载 | 业界领先的 SSH 客户端与服务器管理终端</title>
     <meta name="keywords" content="SSH工具, FinalShell下载, Linux服务器管理, 远程桌面, 终端模拟器">
     <meta name="description" content="FinalShell 是一款一体化的服务器网络管理软件，不仅是 SSH 客户端，更是强大的开发运维助手。支持 Windows, macOS, Linux。">
-    <style>
+<style>
         :root {
-            --bg-deep: #0f172a;      /* 更深邃的底色 */
-            --bg-main: #1e293b;      /* 板块底色 */
-            --accent: #38bdf8;       /* 科技蓝 */
+            --bg-deep: #0f172a;
+            --bg-main: #1e293b;
+            --accent: #38bdf8;
             --text-main: #f1f5f9;
             --text-dim: #94a3b8;
             --white: #ffffff;
@@ -18,6 +18,7 @@
 
         body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: #0f172a; /* 兜底色 */
             background-color: var(--bg-deep);
             color: var(--text-main);
             margin: 0;
@@ -27,33 +28,24 @@
         a { text-decoration: none; transition: 0.3s; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-        /* 顶部导航 */
         header { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .nav-flex { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; color: var(--white); }
         .nav-links a { color: var(--text-dim); margin-left: 25px; font-size: 14px; }
         .nav-links a:hover { color: var(--accent); }
 
-        /* Hero 区域 */
         .hero { text-align: center; padding: 80px 0; background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%); }
         .hero h1 { font-size: 3.5rem; margin-bottom: 10px; color: var(--white); letter-spacing: -1px; }
         .hero p { font-size: 1.25rem; color: var(--text-dim); max-width: 700px; margin: 0 auto 40px; }
         
-        /* 下载按钮 */
         .btn-group { display: flex; gap: 20px; justify-content: center; margin-bottom: 50px; }
-        .btn { 
-            padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 18px;
-            display: inline-flex; align-items: center;
-        }
+        .btn { padding: 16px 40px; border-radius: 8px; font-weight: 600; font-size: 18px; display: inline-flex; align-items: center; }
         .btn-primary { background: var(--white); color: var(--bg-deep); }
         .btn-primary:hover { background: var(--accent); color: var(--white); transform: translateY(-2px); }
         .btn-outline { border: 1px solid rgba(255,255,255,0.2); color: var(--white); }
         .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* 内容与文章列表布局 */
         .main-grid { display: grid; grid-template-columns: 1fr 320px; gap: 40px; margin-top: 40px; }
-
-        /* 深度图文区域 */
         .article-content { background: var(--bg-main); padding: 40px; border-radius: 12px; }
         .article-content h2 { color: var(--white); border-left: 4px solid var(--accent); padding-left: 15px; margin-top: 40px; }
         .article-content p { margin-bottom: 20px; color: #cbd5e1; }
@@ -61,15 +53,13 @@
         .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
         .feature-card { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; font-size: 14px; }
 
-        /* 侧边栏文章列表 */
         .sidebar h3 { font-size: 18px; margin-bottom: 20px; color: var(--white); }
         .post-list { list-style: none; padding: 0; }
-        .post-item { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .post-item a { color: var(--text-main); font-size: 15px; display: block; line-height: 1.4; }
+        .post-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .post-item a { color: var(--text-main); font-size: 15px; text-decoration: none; }
         .post-item a:hover { color: var(--accent); }
-        .post-meta { font-size: 12px; color: var(--text-dim); margin-top: 5px; display: block; }
 
-        footer { text-align: center; padding: 60px 0; color: var(--text-dim); font-size: 14px; }
+        footer { text-align: center; padding: 60px 0; color: var(--text-dim); font-size: 14px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
 
         @media (max-width: 850px) {
             .main-grid { grid-template-columns: 1fr; }
@@ -152,14 +142,14 @@
     <aside class="sidebar">
         <h3>最新技术动态</h3>
         <ul class="post-list">
-    {% for post in collections.blog | reverse %}
-    <li class="post-item">
-        <a href="{{ post.url }}">{{ post.data.title }}</a>
-    </li>
-    {% else %}
-    <li>暂无文章更新</li>
-    {% endfor %}
-</ul>
+            {% for post in collections.blog | reverse %}
+            <li class="post-item">
+                <a href="{{ post.url }}">{{ post.data.title }}</a>
+            </li>
+            {% else %}
+            <li>暂无内容</li>
+            {% endfor %}
+        </ul>
         <div style="margin-top:40px; padding:20px; background:var(--accent); color:var(--bg-deep); border-radius:8px;">
             <strong>订阅更新</strong><br>
             <small>获取最新安全补丁通知</small>
@@ -169,8 +159,7 @@
 
 <footer>
     <div class="container">
-        <p>&copy; 2026 FinalShell SSH. 个人开发者项目，由社区驱动支持。</p>
-
+        <p>&copy; 2026 FinalShell SSH. 个人开发者项目。</p>
     </div>
 </footer>
 
