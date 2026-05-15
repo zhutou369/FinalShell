@@ -1,8 +1,8 @@
 backend:
   name: github
-  repo: zhutou369/rcqry
+  repo: zhutou369/FinalShell
   branch: main
-  base_url: https://cool-lab-6ea6.zhutou757.workers.dev
+  base_url: https://red-grass-4045.zhutou757.workers.dev
   auth_endpoint: auth
 
 # 媒体库配置（必须放在根层级，不能缩进到 backend 里）
