@@ -1,0 +1,28 @@
+backend:
+  name: github
+  repo: zhutou369/rcqry
+  branch: main
+  base_url: https://cool-lab-6ea6.zhutou757.workers.dev
+  auth_endpoint: auth
+
+# 媒体库配置（必须放在根层级，不能缩进到 backend 里）
+media_folder: "assets/img"
+public_folder: "/assets/img"
+
+# 基础配置
+display_type: list
+show_preview_links: false
+
+collections:
+  - name: "blog"
+    label: "文章发布"
+    folder: "posts"
+    create: true
+    # 强制文件名唯一，防止内容覆盖
+    slug: "{{year}}{{month}}{{day}}-{{hour}}{{minute}}{{second}}-{{slug}}"
+    fields:
+      - {label: "文章标题", name: "title", widget: "string"}
+      - {label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD HH:mm:ss"}
+      - {label: "正文内容", name: "body", widget: "markdown"}
+      - {label: "标签", name: "tags", widget: "hidden", default: "blog"}
+      - {label: "布局", name: "layout", widget: "hidden", default: "layout.njk"}
