@@ -1,188 +1,118 @@
 ﻿<!DOCTYPE html>
-<html lang="zh-Hans" style="background-color: #0f172a;">
+<html lang="zh-Hans" style="background-color: #0f172a; margin: 0; padding: 0;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FinalShell 官方下载 | 强大的 SSH 客户端</title>
-    
+    <title>FinalShell 下载 | 官方版</title>
     <style>
-        /* 1. 全局重置，消除所有顶部白边和默认间距 */
+        /* 1. 强制消除所有可能的白边 */
         * { box-sizing: border-box; }
-        html, body {
+        body {
             margin: 0;
             padding: 0;
-            background-color: #0f172a !important; 
+            background-color: #0f172a !important;
             color: #f1f5f9;
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            -webkit-font-smoothing: antialiased;
+            font-family: sans-serif;
         }
 
-        .container { 
-            max-width: 1100px; 
-            margin: 0 auto; 
-            padding: 0 20px; 
+        /* 2. 限制全局容器宽度 */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* 3. 核心修复：强制图片缩放 */
+        /* 无论图片原图多大，最高只能占满父容器，且高度自适应 */
+        img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+        }
+
+        /* 4. 头部 Banner 图片的“保险箱” */
+        .img-shield {
             width: 100%;
+            max-width: 800px; /* 锁死最大宽度 */
+            margin: 30px auto;
+            border-radius: 10px;
+            overflow: hidden; /* 超出部分强制切掉 */
+            border: 1px solid #334155;
         }
 
-        /* 2. 导航栏样式 */
-        header { 
-            padding: 20px 0; 
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            background-color: #1e293b;
-        }
-        .nav-flex { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        .logo { font-size: 24px; font-weight: bold; color: #ffffff; }
-        .nav-links a { 
-            color: #94a3b8; 
-            margin-left: 20px; 
-            text-decoration: none; 
-            font-size: 14px; 
-            transition: 0.3s;
-        }
-        .nav-links a:hover { color: #38bdf8; }
-
-        /* 3. Hero 主横幅：严格限制图片 */
-        .hero { 
-            text-align: center; 
-            padding: 60px 0; 
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); 
-        }
-        .hero h1 { 
-            font-size: 2.5rem; 
-            color: #ffffff; 
-            margin: 0 0 15px 0; 
-        }
-        .hero p { 
-            color: #94a3b8; 
-            font-size: 1.1rem; 
-            max-width: 600px; 
-            margin: 0 auto 30px; 
-        }
-        
-        .hero-img-box { 
-            width: 100%; 
-            max-width: 850px; 
-            margin: 40px auto 0; 
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .hero-img-box img { 
-            width: 100%; 
-            height: auto; 
-            display: block; 
-        }
-
-        /* 4. 下载按钮 */
-        .btn-group { display: flex; gap: 15px; justify-content: center; }
-        .btn { 
-            padding: 14px 35px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            text-decoration: none; 
-            font-size: 16px;
-        }
-        .btn-blue { background-color: #38bdf8; color: #ffffff; }
-        .btn-outline { border: 1px solid #38bdf8; color: #38bdf8; }
-
-        /* 5. 核心栅格：修复排版乱 */
-        .main-grid { 
+        /* 5. 简单的两栏布局 */
+        .main-wrapper {
             display: flex;
             flex-wrap: wrap;
-            gap: 40px; 
-            margin-top: 50px; 
-            padding-bottom: 80px;
+            gap: 30px;
+            margin-top: 40px;
         }
-        .article-part { 
-            flex: 1;
-            min-width: 300px;
-            background-color: #1e293b; 
-            padding: 35px; 
-            border-radius: 12px; 
-        }
-        .article-part h2 { 
-            color: #ffffff; 
-            border-left: 4px solid #38bdf8; 
-            padding-left: 15px; 
-            margin-top: 0;
-        }
+        .main-content { flex: 1; min-width: 300px; background: #1e293b; padding: 25px; border-radius: 8px; }
+        .sidebar { width: 280px; }
 
-        .sidebar-part { 
-            width: 300px; 
-        }
-        .sidebar-part h3 { color: #ffffff; margin-top: 0; }
-        .post-list { list-style: none; padding: 0; margin: 0; }
-        .post-item { 
-            padding: 12px 0; 
-            border-bottom: 1px solid rgba(255,255,255,0.05); 
-        }
-        .post-item a { 
-            color: #f1f5f9; 
-            text-decoration: none; 
-            font-size: 14px; 
-        }
-        .post-item a:hover { color: #38bdf8; }
+        header { background: #1e293b; padding: 15px 0; border-bottom: 1px solid #334155; }
+        .btn { background: #38bdf8; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; }
+        
+        ul { list-style: none; padding: 0; }
+        li { padding: 10px 0; border-bottom: 1px solid #334155; }
+        a { color: #38bdf8; text-decoration: none; }
 
-        /* 响应式适配 */
-        @media (max-width: 850px) {
-            .sidebar-part { width: 100%; }
-            .hero h1 { font-size: 2rem; }
+        @media (max-width: 800px) {
+            .sidebar { width: 100%; }
+            h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
-<body>
+<body style="background-color: #0f172a;">
 
 <header>
-    <div class="container nav-flex">
-        <div class="logo">FinalShell SSH</div>
-        <nav class="nav-links">
-            <a href="#">特性</a>
-            <a href="#">更新文章</a>
-            <a href="#">下载</a>
-        </nav>
+    <div class="container">
+        <strong>FinalShell SSH</strong>
     </div>
 </header>
 
-<section class="hero">
+<section style="text-align: center; padding: 40px 0;">
     <div class="container">
-        <h1>强大的 SSH 客户端</h1>
-        <p>集成终端、文件管理与系统监控的一站式运维神器</p>
-        <div class="btn-group">
-            <a href="#" class="btn btn-blue">Windows 下载</a>
-            <a href="#" class="btn btn-outline">macOS 下载</a>
+        <h1>新一代 SSH 管理工具</h1>
+        <p style="color: #94a3b8;">一体化服务器运维平台</p>
+        
+        <div style="margin: 20px 0;">
+            <a href="#" class="btn">Windows 版下载</a>
         </div>
-        <div class="hero-img-box">
-            <img src="https://pc1.gtimg.com/guanjia/images/2b/b1/2bb1dee1d6433f1ef0f3a185eeb0d908.jpg" alt="界面预览">
+
+        <div class="img-shield">
+            <img src="https://pc1.gtimg.com/guanjia/images/2b/b1/2bb1dee1d6433f1ef0f3a185eeb0d908.jpg" alt="FinalShell 预览">
         </div>
     </div>
 </section>
 
-<main class="container main-grid">
-    <article class="article-part">
-        <h2>全能一体化运维</h2>
-        <p>FinalShell 完美融合了 SSH 终端和 SFTP 客户端，让你在同一个界面内流转，无需在多个软件间频繁切换，极大提升了工作效率。</p>
-        <p>支持多平台（Windows, macOS, Linux），并提供实时服务器性能监控曲线，一眼看穿系统瓶颈。</p>
-        <img src="https://pc1.gtimg.com/guanjia/images/2b/b1/2bb1dee1d6433f1ef0f3a185eeb0d908.jpg" style="width:100%; border-radius:8px; margin-top:20px;" alt="功能演示">
-    </article>
+<main class="container">
+    <div class="main-wrapper">
+        <div class="main-content">
+            <h2 style="margin-top: 0;">专业运维必备</h2>
+            <p>FinalShell 完美融合了 SSH 终端和 SFTP 客户端，支持多平台同步，提供实时服务器性能监控曲线。</p>
+            <div class="img-shield" style="max-width: 100%;">
+                <img src="https://pc1.gtimg.com/guanjia/images/2b/b1/2bb1dee1d6433f1ef0f3a185eeb0d908.jpg" alt="界面截图">
+            </div>
+        </div>
 
-    <aside class="sidebar-part">
-        <h3>最新更新文章</h3>
-        <ul class="post-list">
-            <li class="post-item"><a href="#">FinalShell 性能优化指南</a></li>
-            <li class="post-item"><a href="#">如何安全地管理 SSH 密钥</a></li>
-            <li class="post-item"><a href="#">解决终端连接超时的方法</a></li>
-            <li class="post-item"><a href="#">SFTP 多线程加速配置教程</a></li>
-        </ul>
-    </aside>
+        <aside class="sidebar">
+            <h3 style="margin-top: 0;">最新更新</h3>
+            <ul>
+                {% for post in collections.blog | reverse %}
+                <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
+                {% else %}
+                <li><a href="#">FinalShell 使用教程</a></li>
+                <li><a href="#">如何加速 SFTP 传输</a></li>
+                <li><a href="#">SSH 安全配置建议</a></li>
+                {% endfor %}
+            </ul>
+        </aside>
+    </div>
 </main>
 
-<footer style="text-align:center; padding: 50px 0; color:#94a3b8; font-size: 14px;">
-    <p>&copy; 2026 FinalShell SSH. 已完成排版兼容性修复。</p>
+<footer style="text-align: center; padding: 40px 0; font-size: 12px; color: #64748b;">
+    <p>&copy; 2026 FinalShell SSH 工具. 排版增强版.</p>
 </footer>
 
 </body>
