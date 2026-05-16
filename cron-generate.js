@@ -6,21 +6,24 @@ const path = require('path');
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 async function runAutoBot() {
-    const jsonPath = path.join(__dirname, 'keywords.json');
+    const txtPath = path.join(__dirname, 'keywords.txt');   // 彻底改为 txt 路径
     const imagesPath = path.join(__dirname, 'images.txt'); // 图片链接文本文档
     
-    // 2. 检查词库文件是否存在
-    if (!fs.existsSync(jsonPath)) {
-        console.error("❌ 未找到 keywords.json 词库文件，流程终止。");
+    // 2. 检查关键词文本是否存在
+    if (!fs.existsSync(txtPath)) {
+        console.error("❌ 未找到 keywords.txt 词库文件，流程终止。");
         process.exit(1);
     }
     
-    // 3. 读取并解析词库
+    // 3. 读取并解析文本行关键词
     let keywords = [];
     try {
-        keywords = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+        keywords = fs.readFileSync(txtPath, 'utf-8')
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length > 0); // 自动过滤空行
     } catch (e) {
-        console.error("❌ keywords.json 格式解析错误:", e);
+        console.error("❌ 读取 keywords.txt 失败:", e);
         process.exit(1);
     }
     
@@ -33,29 +36,25 @@ async function runAutoBot() {
     let selectedImages = [];
     if (fs.existsSync(imagesPath)) {
         try {
-            // 按行读取，并过滤掉空行
             const allImages = fs.readFileSync(imagesPath, 'utf-8')
                 .split('\n')
                 .map(line => line.trim())
                 .filter(line => line.length > 0);
 
             if (allImages.length >= 2) {
-                // 洗牌算法随机抽取两个不同的图片链接
                 const shuffled = allImages.sort(() => 0.5 - Math.random());
                 selectedImages = shuffled.slice(0, 2);
                 console.log(`🖼️ 成功抽取今日随机图片:\n 1. ${selectedImages[0]}\n 2. ${selectedImages[1]}`);
             } else if (allImages.length === 1) {
-                selectedImages = [allImages[0], allImages[0]]; // 只有一张时重复使用
+                selectedImages = [allImages[0], allImages[0]];
                 console.warn("⚠️ images.txt 中只有 1 张图片，两处插图将使用同一张图。");
             }
         } catch (e) {
             console.error("⚠️ 读取 images.txt 失败，本次生成将不带插图:", e);
         }
-    } else {
-        console.warn("⚠️ 未找到 images.txt，请在根目录下建立该文件，每行放置一个图片链接。");
     }
 
-    // 5. 弹出并消费第一个关键词
+    // 5. 弹出并消费第一个关键词（首行文本）
     const currentTopic = keywords.shift();
     console.log(`🤖 今日推文选题确定: [ ${currentTopic} ]`);
 
@@ -118,18 +117,18 @@ async function runAutoBot() {
         // 9. 本地磁盘文件名
         const fileName = `${todayStr}-post-${randomId}.md`;
         
-        // 10. 定位到你真实的本地文章库路径：根目录下的 posts 文件夹
+        // 10. 定位到文章库路径
         const outputDir = path.join(__dirname, 'posts'); 
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
         }
         
-        // 11. 写入文件
+        // 11. 写入文章
         fs.writeFileSync(path.join(outputDir, fileName), articleContent, 'utf-8');
         console.log(`✅ 新文章已成功写入本地磁盘: posts/${fileName}`);
 
-        // 12. 将瘦身后的新词库回写进 json 文件
-        fs.writeFileSync(jsonPath, JSON.stringify(keywords, null, 2), 'utf-8');
+        // 12. 将剩余的关键词重新按行拼接，回写进 txt 文件
+        fs.writeFileSync(txtPath, keywords.join('\n'), 'utf-8');
         console.log(`📉 词库更新完毕！剩余可用关键词数: ${keywords.length}`);
 
     } catch (error) {
