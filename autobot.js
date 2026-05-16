@@ -106,7 +106,7 @@ async function runAutoBot() {
         console.log('正在连接稳定版 Gemini API 生产高质量内容...');
         
         // 强行使用官方 v1 稳定版端点 + gemini-1.5-flash
-        const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
         
         const res = await fetch(apiUrl, {
             method: 'POST',
