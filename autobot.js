@@ -2,29 +2,37 @@ const { GoogleGenAI } = require('@google/genai');
 const fs = require('fs');
 const path = require('path');
 
-// 1. 初始化 Gemini 客户端
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
 async function runAutoBot() {
-    const txtPath = path.join(__dirname, 'keywords.txt');   // 彻底改为 txt 路径
-    const imagesPath = path.join(__dirname, 'images.txt'); // 图片链接文本文档
+    // 1. 检查环境变量中是否存在密钥
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+        // 【核心兼容】：如果是在云端编译期运行，由于没有密钥，直接打印提示并优雅退出，不抛出异常
+        console.warn("⚠️ [环境提示] 未检测到 GEMINI_API_KEY 环境密钥。如果你当前处于云端(Cloudflare/Vercel)打包阶段，此属正常现象。脚本已自动跳过生成，交付11ty进行页面纯静态渲染。");
+        return; 
+    }
+
+    // 2. 初始化 Gemini 客户端
+    const ai = new GoogleGenAI({ apiKey: apiKey });
+
+    const txtPath = path.join(__dirname, 'keywords.txt');   
+    const imagesPath = path.join(__dirname, 'images.txt'); 
     
-    // 2. 检查关键词文本是否存在
+    // 3. 检查并读取关键词文本
     if (!fs.existsSync(txtPath)) {
-        console.error("❌ 未找到 keywords.txt 词库文件，流程终止。");
-        process.exit(1);
+        console.warn("⚠️ 未找到 keywords.txt 词库文件，跳过本次生成。");
+        return;
     }
     
-    // 3. 读取并解析文本行关键词
     let keywords = [];
     try {
+        // 兼容 Windows(\r\n) 和 Linux(\n) 的换行符切割
         keywords = fs.readFileSync(txtPath, 'utf-8')
-            .split('\n')
+            .split(/\r?\n/)
             .map(line => line.trim())
-            .filter(line => line.length > 0); // 自动过滤空行
+            .filter(line => line.length > 0); 
     } catch (e) {
-        console.error("❌ 读取 keywords.txt 失败:", e);
-        process.exit(1);
+        console.error("⚠️ 读取 keywords.txt 失败:", e.message);
+        return;
     }
     
     if (keywords.length === 0) {
@@ -37,7 +45,7 @@ async function runAutoBot() {
     if (fs.existsSync(imagesPath)) {
         try {
             const allImages = fs.readFileSync(imagesPath, 'utf-8')
-                .split('\n')
+                .split(/\r?\n/)
                 .map(line => line.trim())
                 .filter(line => line.length > 0);
 
@@ -47,22 +55,20 @@ async function runAutoBot() {
                 console.log(`🖼️ 成功抽取今日随机图片:\n 1. ${selectedImages[0]}\n 2. ${selectedImages[1]}`);
             } else if (allImages.length === 1) {
                 selectedImages = [allImages[0], allImages[0]];
-                console.warn("⚠️ images.txt 中只有 1 张图片，两处插图将使用同一张图。");
             }
         } catch (e) {
-            console.error("⚠️ 读取 images.txt 失败，本次生成将不带插图:", e);
+            console.error("⚠️ 读取 images.txt 失败，本次生成将不带插图:", e.message);
         }
     }
 
-    // 5. 弹出并消费第一个关键词（首行文本）
+    // 5. 弹出并消费第一个关键词
     const currentTopic = keywords.shift();
     console.log(`🤖 今日推文选题确定: [ ${currentTopic} ]`);
 
-    // 6. 获取当前日期 (格式: 2026-05-16)
     const todayStr = new Date().toISOString().split('T')[0];
     const randomId = Math.floor(100 + Math.random() * 900); 
 
-    // 7. 构造图片指导 Prompt 片段
+    // 6. 构造图片指导 Prompt
     let imagePromptInstruction = '';
     if (selectedImages.length === 2) {
         imagePromptInstruction = `
@@ -77,15 +83,14 @@ async function runAutoBot() {
         `;
     }
 
-    // 8. 构造终极 SEO Prompt 模板
+    // 7. 构造终极 SEO Prompt 模板
     const prompt = `
     你是一个精通技术SEO和前沿网络技术的专家博主。请针对主题 "${currentTopic}" 撰写一篇深入、对用户有极高价值的原创文章。
     
     【重要核心要求】：
     1. 请将本次的主题 "${currentTopic}" 翻译为一个干净、地道、用连字符隔开的【纯英文短语】，作为 URL 的别名（Slug）。
-       例如，如果主题是"独立站SEO优化方向"，你可以翻译为 "independent-site-seo-directions"。
     2. 字数严格控制在 1200 - 2000 字之间，多用结构化列表、二级标题（##）、三级标题（###）。
-    3. 严格按以下 Markdown 格式输出头部元数据，禁止在最外层包含 \`\`\`markdown 这样的包裹外壳，必须直接以 --- 开头：
+    3. 严格按以下 Markdown 格式输出头部元数据，禁止在最外层包含 \`\`\`markdown 包裹外壳，必须直接以 --- 开头：
 
     ---
     title: "${currentTopic}"
@@ -114,26 +119,21 @@ async function runAutoBot() {
             throw new Error("Gemini 返回内容为空");
         }
 
-        // 9. 本地磁盘文件名
         const fileName = `${todayStr}-post-${randomId}.md`;
-        
-        // 10. 定位到文章库路径
         const outputDir = path.join(__dirname, 'posts'); 
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
         }
         
-        // 11. 写入文章
         fs.writeFileSync(path.join(outputDir, fileName), articleContent, 'utf-8');
         console.log(`✅ 新文章已成功写入本地磁盘: posts/${fileName}`);
 
-        // 12. 将剩余的关键词重新按行拼接，回写进 txt 文件
+        // 将剩余的关键词重新按行拼接，回写进 txt 文件
         fs.writeFileSync(txtPath, keywords.join('\n'), 'utf-8');
         console.log(`📉 词库更新完毕！剩余可用关键词数: ${keywords.length}`);
 
     } catch (error) {
-        console.error("❌ 自动化过程遭遇致命错误:", error);
-        process.exit(1);
+        console.error("❌ 自动化过程遭遇致命错误:", error.message);
     }
 }
 

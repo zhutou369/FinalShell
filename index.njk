@@ -163,10 +163,8 @@ title: FinalShell 官方下载 | 强大的 SSH 客户端
     <aside class="sidebar">
 <h3>最新文章更新</h3>
 <ul class="post-list">
-    {# 1. 直接调用被配置文件完美处理过的 blog 集合，并进行反转（最新在前） #}
     {% set count = 0 %}
     {% for post in collections.blog | reverse %}
-        {# 2. 严格限制只输出前 5 篇，无论文章总数是 2 篇还是 100 篇都绝不报错 #}
         {% if count < 5 %}
             <li class="post-item">
                 <a href="{{ post.url }}">{{ post.data.title }}</a>
