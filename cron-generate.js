@@ -69,7 +69,7 @@ async function runAutoBot() {
         const fileName = `${new Date().toISOString().split('T')[0]}-${slug}.md`;
         
         // 7. 定位并写入 11ty 存放文章的目录（这里假设是 src/posts，你可以根据实际模板修改）
-        const outputDir = path.join(__dirname, 'src', 'posts'); 
+        const outputDir = path.join(__dirname, 'posts');
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
         }
