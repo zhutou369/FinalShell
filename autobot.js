@@ -6,48 +6,45 @@ async function runAutoBot() {
     // 1. 检查环境变量中是否存在密钥
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        // 【核心兼容】：如果是在云端编译期运行，由于没有密钥，直接打印提示并优雅退出，不抛出异常
-        console.warn("⚠️ [环境提示] 未检测到 GEMINI_API_KEY 环境密钥。如果你当前处于云端(Cloudflare/Vercel)打包阶段，此属正常现象。脚本已自动跳过生成，交付11ty进行页面纯静态渲染。");
+        console.warn("⚠️ [环境提示] 未检测到 GEMINI_API_KEY 环境密钥。打包阶段跳过生成。");
         return; 
     }
 
     // 2. 初始化 Gemini 客户端
     const ai = new GoogleGenAI({ apiKey: apiKey });
 
-    const txtPath = path.join(__dirname, 'keywords.txt');   
+    // 【重构重点】：文件路径切回标准的 .json 格式
+    const jsonPath = path.join(__dirname, 'keywords.json');   
     const imagesPath = path.join(__dirname, 'images.txt'); 
     
-    // 3. 检查并读取关键词文本
-    if (!fs.existsSync(txtPath)) {
-        console.warn("⚠️ 未找到 keywords.txt 词库文件，跳过本次生成。");
+    // 3. 检查并读取 JSON 关键词文本
+    if (!fs.existsSync(jsonPath)) {
+        console.warn("⚠️ 未找到 keywords.json 词库文件，跳过本次生成。");
         return;
     }
     
     let keywords = [];
     try {
-        // 兼容 Windows(\r\n) 和 Linux(\n) 的换行符切割
-        keywords = fs.readFileSync(txtPath, 'utf-8')
-            .split(/\r?\n/)
-            .map(line => line.trim())
-            .filter(line => line.length > 0); 
+        // 【重构重点】：使用原汁原味的标准 JSON 安全解析
+        keywords = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
     } catch (e) {
-        console.error("⚠️ 读取 keywords.txt 失败:", e.message);
+        console.error("⚠️ 读取或解析 keywords.json 失败，请检查JSON语法:", e.message);
         return;
     }
     
-    if (keywords.length === 0) {
-        console.warn("⚠️ 关键词库已空，请及时补充新选题！");
+    if (!Array.isArray(keywords) || keywords.length === 0) {
+        console.warn("⚠️ 关键词库为空或格式非数组，请及时补充新选题！");
         return;
     }
 
-    // 4. 提取并准备随机图片链接 (2个)
+    // 4. 提取并准备随机图片链接
     let selectedImages = [];
     if (fs.existsSync(imagesPath)) {
         try {
             const allImages = fs.readFileSync(imagesPath, 'utf-8')
                 .split(/\r?\n/)
-                .map(line => line.trim())
-                .filter(line => line.length > 0);
+                .map(line => line.trim().replace(/^\\s*/i, '')) 
+                .filter(line => line.length > 0 && line.startsWith('http'));
 
             if (allImages.length >= 2) {
                 const shuffled = allImages.sort(() => 0.5 - Math.random());
@@ -109,6 +106,7 @@ async function runAutoBot() {
 
     try {
         console.log('正在连接 Gemini API 生产高质量内容...');
+        // 回归最兼容、最不会报错的主力模型
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,
@@ -128,8 +126,8 @@ async function runAutoBot() {
         fs.writeFileSync(path.join(outputDir, fileName), articleContent, 'utf-8');
         console.log(`✅ 新文章已成功写入本地磁盘: posts/${fileName}`);
 
-        // 将剩余的关键词重新按行拼接，回写进 txt 文件
-        fs.writeFileSync(txtPath, keywords.join('\n'), 'utf-8');
+        // 【重构重点】：消费完毕后，重新回写成标准的 JSON 数组格式
+        fs.writeFileSync(jsonPath, JSON.stringify(keywords, null, 2), 'utf-8');
         console.log(`📉 词库更新完毕！剩余可用关键词数: ${keywords.length}`);
 
     } catch (error) {
