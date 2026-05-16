@@ -110,7 +110,7 @@ async function runAutoBot() {
     try {
         console.log('正在连接 Gemini API 生产高质量内容...');
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-1.5-flash',
             contents: prompt,
         });
 
