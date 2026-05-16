@@ -6,7 +6,6 @@ async function runAutoBot() {
     // 1. 检查环境变量中是否存在密钥
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        // 【核心兼容】：如果是在云端编译期运行，由于没有密钥，直接打印提示并优雅退出，不抛出异常
         console.warn("⚠️ [环境提示] 未检测到 GEMINI_API_KEY 环境密钥。如果你当前处于云端(Cloudflare/Vercel)打包阶段，此属正常现象。脚本已自动跳过生成，交付11ty进行页面纯静态渲染。");
         return; 
     }
@@ -25,11 +24,11 @@ async function runAutoBot() {
     
     let keywords = [];
     try {
-        // 兼容 Windows(\r\n) 和 Linux(\n) 的换行符切割
+        // 【防错升级】：过滤掉带有 [source] 的垃圾行，剥离前后意外携带的双引号或单引号
         keywords = fs.readFileSync(txtPath, 'utf-8')
             .split(/\r?\n/)
-            .map(line => line.trim())
-            .filter(line => line.length > 0); 
+            .map(line => line.trim().replace(/^["']|["']$/g, '')) // 去除包裹的引号
+            .filter(line => line.length > 0 && !line.startsWith('[source')); 
     } catch (e) {
         console.error("⚠️ 读取 keywords.txt 失败:", e.message);
         return;
@@ -44,10 +43,11 @@ async function runAutoBot() {
     let selectedImages = [];
     if (fs.existsSync(imagesPath)) {
         try {
+            // 【防错升级】：用正则把 URL 前面夹杂的 强行剔除干净，只留纯粹的 http 链接
             const allImages = fs.readFileSync(imagesPath, 'utf-8')
                 .split(/\r?\n/)
-                .map(line => line.trim())
-                .filter(line => line.length > 0);
+                .map(line => line.trim().replace(/^\\s*/i, '')) 
+                .filter(line => line.length > 0 && line.startsWith('http'));
 
             if (allImages.length >= 2) {
                 const shuffled = allImages.sort(() => 0.5 - Math.random());
