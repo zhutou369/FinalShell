@@ -1,4 +1,3 @@
-const { GoogleGenAI } = require('@google/genai');
 const fs = require('fs');
 const path = require('path');
 
@@ -6,12 +5,9 @@ async function runAutoBot() {
     // 1. 检查环境变量中是否存在密钥
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        console.warn("⚠️ [环境提示] 未检测到 GEMINI_API_KEY 环境密钥。如果你当前处于云端(Cloudflare/Vercel)打包阶段，此属正常现象。脚本已自动跳过生成，交付11ty进行页面纯静态渲染。");
+        console.warn("⚠️ [环境提示] 未检测到 GEMINI_API_KEY 环境密钥。如果你当前处于云端阶段，此属正常现象。脚本已自动跳过生成。");
         return; 
     }
-
-    // 2. 初始化 Gemini 客户端
-    const ai = new GoogleGenAI({ apiKey: apiKey });
 
     const txtPath = path.join(__dirname, 'keywords.txt');   
     const imagesPath = path.join(__dirname, 'images.txt'); 
@@ -24,10 +20,9 @@ async function runAutoBot() {
     
     let keywords = [];
     try {
-        // 【防错升级】：过滤掉带有 [source] 的垃圾行，剥离前后意外携带的双引号或单引号
         keywords = fs.readFileSync(txtPath, 'utf-8')
             .split(/\r?\n/)
-            .map(line => line.trim().replace(/^["']|["']$/g, '')) // 去除包裹的引号
+            .map(line => line.trim().replace(/^["']|["']$/g, ''))
             .filter(line => line.length > 0 && !line.startsWith('[source')); 
     } catch (e) {
         console.error("⚠️ 读取 keywords.txt 失败:", e.message);
@@ -39,11 +34,10 @@ async function runAutoBot() {
         return;
     }
 
-    // 4. 提取并准备随机图片链接 (2个)
+    // 4. 提取并准备随机图片链接
     let selectedImages = [];
     if (fs.existsSync(imagesPath)) {
         try {
-            // 【防错升级】：用正则把 URL 前面夹杂的 强行剔除干净，只留纯粹的 http 链接
             const allImages = fs.readFileSync(imagesPath, 'utf-8')
                 .split(/\r?\n/)
                 .map(line => line.trim().replace(/^\\s*/i, '')) 
@@ -107,16 +101,30 @@ async function runAutoBot() {
     这里开始写文章正文。请多用二级标题（##）、三级标题（###）对内容进行多层级切分，保证极佳的SEO可读性与结构性。
     `;
 
+    // 8. 使用标准原生 Fetch 绕过 SDK 的 v1beta 404 顽疾并调用 1.5-flash
     try {
-        console.log('正在连接 Gemini API 生产高质量内容...');
-        const response = await ai.models.generateContent({
-            model: 'gemini-1.5-flash',
-            contents: prompt,
+        console.log('正在连接稳定版 Gemini API 生产高质量内容...');
+        
+        // 强行使用官方 v1 稳定版端点 + gemini-1.5-flash
+        const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        
+        const res = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
         });
 
-        const articleContent = response.text;
+        const data = await res.json();
+
+        if (data.error) {
+            throw new Error(`API 返回错误: ${data.error.message}`);
+        }
+
+        const articleContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
         if (!articleContent) {
-            throw new Error("Gemini 返回内容为空");
+            throw new Error("Gemini 返回的文本结构为空，请检查配额或网络");
         }
 
         const fileName = `${todayStr}-post-${randomId}.md`;
