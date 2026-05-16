@@ -1,3 +1,4 @@
+const { GoogleGenAI } = require('@google/genai');
 const fs = require('fs');
 const path = require('path');
 
@@ -5,9 +6,13 @@ async function runAutoBot() {
     // 1. 检查环境变量中是否存在密钥
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        console.warn("⚠️ [环境提示] 未检测到 GEMINI_API_KEY 环境密钥。如果你当前处于云端阶段，此属正常现象。脚本已自动跳过生成。");
+        // 【核心兼容】：如果是在云端编译期运行，由于没有密钥，直接打印提示并优雅退出，不抛出异常
+        console.warn("⚠️ [环境提示] 未检测到 GEMINI_API_KEY 环境密钥。如果你当前处于云端(Cloudflare/Vercel)打包阶段，此属正常现象。脚本已自动跳过生成，交付11ty进行页面纯静态渲染。");
         return; 
     }
+
+    // 2. 初始化 Gemini 客户端
+    const ai = new GoogleGenAI({ apiKey: apiKey });
 
     const txtPath = path.join(__dirname, 'keywords.txt');   
     const imagesPath = path.join(__dirname, 'images.txt'); 
@@ -20,10 +25,11 @@ async function runAutoBot() {
     
     let keywords = [];
     try {
+        // 兼容 Windows(\r\n) 和 Linux(\n) 的换行符切割
         keywords = fs.readFileSync(txtPath, 'utf-8')
             .split(/\r?\n/)
-            .map(line => line.trim().replace(/^["']|["']$/g, ''))
-            .filter(line => line.length > 0 && !line.startsWith('[source')); 
+            .map(line => line.trim())
+            .filter(line => line.length > 0); 
     } catch (e) {
         console.error("⚠️ 读取 keywords.txt 失败:", e.message);
         return;
@@ -34,14 +40,14 @@ async function runAutoBot() {
         return;
     }
 
-    // 4. 提取并准备随机图片链接
+    // 4. 提取并准备随机图片链接 (2个)
     let selectedImages = [];
     if (fs.existsSync(imagesPath)) {
         try {
             const allImages = fs.readFileSync(imagesPath, 'utf-8')
                 .split(/\r?\n/)
-                .map(line => line.trim().replace(/^\\s*/i, '')) 
-                .filter(line => line.length > 0 && line.startsWith('http'));
+                .map(line => line.trim())
+                .filter(line => line.length > 0);
 
             if (allImages.length >= 2) {
                 const shuffled = allImages.sort(() => 0.5 - Math.random());
@@ -101,30 +107,16 @@ async function runAutoBot() {
     这里开始写文章正文。请多用二级标题（##）、三级标题（###）对内容进行多层级切分，保证极佳的SEO可读性与结构性。
     `;
 
-    // 8. 使用标准原生 Fetch 绕过 SDK 的 v1beta 404 顽疾并调用 1.5-flash
     try {
-        console.log('正在连接稳定版 Gemini API 生产高质量内容...');
-        
-        // 强行使用官方 v1 稳定版端点 + gemini-1.5-flash
-        const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
-        
-        const res = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
+        console.log('正在连接 Gemini API 生产高质量内容...');
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: prompt,
         });
 
-        const data = await res.json();
-
-        if (data.error) {
-            throw new Error(`API 返回错误: ${data.error.message}`);
-        }
-
-        const articleContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        const articleContent = response.text;
         if (!articleContent) {
-            throw new Error("Gemini 返回的文本结构为空，请检查配额或网络");
+            throw new Error("Gemini 返回内容为空");
         }
 
         const fileName = `${todayStr}-post-${randomId}.md`;
