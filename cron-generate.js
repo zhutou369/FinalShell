@@ -45,7 +45,7 @@ async function runAutoBot() {
     description: "针对${currentTopic}的专业技术解析与实操指南。"
     date: ${new Date().toISOString().split('T')[0]}
     tags: ["Tech", "SEO", "Automated"]
-    layout: "layouts/post.njk"
+    layout: "layout.njk"
     ---
 
     这里开始写文章正文。请多用二级标题（##）、三级标题（###）对内容进行多层级切分，保证极佳的SEO可读性与结构性。
