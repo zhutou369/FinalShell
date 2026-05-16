@@ -8,7 +8,7 @@ title: FinalShell 官方下载 | 强大的 SSH 客户端
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FinalShell 官方下载 | 业界领先的 SSH 客户端与服务器管理终端</title>
     <meta name="keywords" content="SSH工具, FinalShell下载, Linux服务器管理, 远程桌面, 终端模拟器">
-    <meta name="description" content="FinalShell 是一款一体化的服务器网络管理软件，不仅是 SSH 客户端，更是强大的开发运维助手。支持 Windows, macOS, Linux。">
+    <meta name="description" content="FinalShell 是一款一体化的服务器 network 管理软件，不仅是 SSH 客户端，更是强大的开发运维助手。支持 Windows, macOS, Linux。">
     <style>
         :root {
             --bg-deep: #0f172a;      /* 更深邃的底色 */
@@ -71,6 +71,14 @@ title: FinalShell 官方下载 | 强大的 SSH 客户端
         .post-item a { color: var(--text-main); font-size: 15px; display: block; line-height: 1.4; }
         .post-item a:hover { color: var(--accent); }
         .post-meta { font-size: 12px; color: var(--text-dim); margin-top: 5px; display: block; }
+        
+        /* 列表入口按钮样式 */
+        .more-articles-btn {
+            display: block; text-align: center; background: rgba(255,255,255,0.05); 
+            color: var(--text-dim); padding: 10px; border-radius: 6px; font-size: 14px;
+            border: 1px dashed rgba(255,255,255,0.1); transition: all 0.3s;
+        }
+        .more-articles-btn:hover { background: rgba(56,189,248,0.1); color: var(--accent); border-color: var(--accent); }
 
         footer { text-align: center; padding: 60px 0; color: var(--text-dim); font-size: 14px; }
 
@@ -145,17 +153,18 @@ title: FinalShell 官方下载 | 强大的 SSH 客户端
 
         <h2>安全与稳定性保障</h2>
         <p>
-            在安全性方面，FinalShell 支持 SSH2 协议，兼容密钥对认证、双因素认证（2FA）。所有敏感信息均经过 AES 加密本地存储，确保你的资产万无一失。
+            In terms of security, FinalShell supports the SSH2 protocol, compatible with key pair authentication and multi-factor authentication (2FA). All sensitive information is locally encrypted via AES, ensuring your assets are perfectly safe.
         </p>
         <p>
             总结来说，如果你需要一个能看清服务器“心跳”、能快速搬运数据、且长得好看的工具，FinalShell 是目前的业界不二之选。
         </p>
-        </article>
+    </article>
 
     <aside class="sidebar">
-         <h3>最新文章更新</h3>
+        <h3>最新文章更新</h3>
         <ul class="post-list">
-            {% for post in collections.blog | reverse %}
+            {# 通过使用 slice(0, 5) 完美控制首页侧边栏仅展示最新的5篇文章 #}
+            {% for post in collections.blog | reverse | slice(0, 5) %}
             <li class="post-item">
                 <a href="{{ post.url }}">{{ post.data.title }}</a>
             </li>
@@ -163,7 +172,9 @@ title: FinalShell 官方下载 | 强大的 SSH 客户端
             <li class="post-item" style="color: #64748b;">暂无内容更新</li>
             {% endfor %}
         </ul>
-        </ul>
+
+        <!-- 新增：引导蜘蛛和用户去列表页的核心入口，增强内链传递 -->
+        <a href="/blog/" class="more-articles-btn">查看更多教程 &raquo;</a>
 
         <div style="margin-top:40px; padding:20px; background:var(--accent); color:var(--bg-deep); border-radius:8px;">
             <strong>订阅更新</strong><br>
