@@ -1,5 +1,5 @@
 ---
-title: FinalShell 技术教程列表
+title: FinalShell 技术支持与教程
 layout: layout.njk
 permalink: /blog/index.html
 pagination:
@@ -8,29 +8,23 @@ pagination:
   alias: posts
   reverse: true
 ---
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
-    <title>{{ title }}{% if pagination.pageNumber > 0 %} - 第{{ pagination.pageNumber + 1 }}页{% endif %} - FinalShell下载</title>
-    <meta name="keywords" content="FinalShell文章列表, SSH工具教程, Linux服务器运维, 远程桌面指南">
-    <meta name="description" content="提供FinalShell最新版下载、最新技术支持、Linux服务器管理教程及远程桌面工具使用指南。{% if pagination.pageNumber > 0 %}当前是第{{ pagination.pageNumber + 1 }}页。{% endif %}">
-    <style>
-        /* 继承你原有的页面基础样式与色彩体系 */
-        :root { --main-green: #075E54; --accent-green: #128C7E; --light-green: #25D366; --bg-gray: #f0f2f5; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.8; color: #333; margin: 0; background: var(--bg-gray); }
-        
-        .list-container { max-width: 900px; margin: 40px auto; background: #fff; padding: 45px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); }
-        
-        header { text-align: center; margin-bottom: 30px; }
-        header a { color: var(--main-green); text-decoration: none; font-weight: bold; font-size: 1.2rem; }
 
-        h1 { color: var(--main-green); border-bottom: 2px solid #eee; padding-bottom: 20px; font-size: 2rem; margin-top: 0; }
-        
-        /* 文章列表布局样式 */
-        .article-list { display: flex; flex-direction: column; gap: 25px; margin-top: 30px; }
+<!-- 
+   注意：因为使用了 layout: layout.njk，母版会自动生成 head、header 和 body 大框架。
+   这里我们只需要专注输出列表页的核心包裹器即可，样式会自动继承或补充。
+-->
+<main class="list-container" style="max-width: 900px; margin: 0 auto; padding: 10px 0;">
+    
+    <!-- 动态动态提示当前页码（只在第2页及以后显示），SEO 非常友好 -->
+    {% if pagination.pageNumber > 0 %}
+        <div style="color: #999; margin-bottom: 20px; font-size: 0.9rem;">
+            当前位置：<a href="/" style="color: #666; text-decoration: none;">首页</a> &gt; <a href="/blog/" style="color: #666; text-decoration: none;">文章列表</a> &gt; 第 {{ pagination.pageNumber + 1 }} 页
+        </div>
+    {% endif %}
+
+    <!-- 文章列表布局样式 -->
+    <style>
+        .article-list { display: flex; flex-direction: column; gap: 25px; margin-top: 20px; }
         .article-item { 
             padding: 20px; 
             border-radius: 8px; 
@@ -40,136 +34,63 @@ pagination:
         }
         .article-item:hover { 
             background: #fff; 
-            border-left-color: var(--accent-green); 
+            border-left-color: var(--accent-green, #128C7E); 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             transform: translateX(4px);
         }
         .item-title { margin: 0 0 10px 0; font-size: 1.3rem; }
         .item-title a { color: #222; text-decoration: none; transition: color 0.2s; }
-        .item-title a:hover { color: var(--accent-green); }
+        .item-title a:hover { color: var(--accent-green, #128C7E); }
         
         .item-meta { color: #999; font-size: 0.85rem; display: flex; gap: 15px; }
         .item-excerpt { color: #666; font-size: 0.95rem; margin-top: 10px; line-height: 1.6; }
 
-        /* SEO 分页导航组件 */
-        .pagination-nav { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 10px; 
-            margin-top: 50px; 
-            padding-top: 30px; 
-            border-top: 2px solid #f4f4f4; 
-        }
-        .page-link { 
-            padding: 8px 16px; 
-            border: 1px solid #ddd; 
-            border-radius: 6px; 
-            color: #555; 
-            text-decoration: none; 
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
-        .page-link:hover { 
-            border-color: var(--accent-green); 
-            color: var(--accent-green); 
-            background: #fff;
-        }
-        .page-active { 
-            padding: 8px 16px; 
-            background: var(--main-green); 
-            color: #fff; 
-            border: 1px solid var(--main-green);
-            border-radius: 6px; 
-            font-weight: bold; 
-            font-size: 0.95rem;
-        }
-        .page-disabled { 
-            padding: 8px 16px; 
-            color: #ccc; 
-            border: 1px solid #eee; 
-            border-radius: 6px;
-            cursor: not-allowed;
-        }
-
-        /* 站群随机互链组件继承 */
-        .footer-links { margin-top: 40px; padding: 20px; background: #fdfdfd; border-radius: 8px; text-align: center; border: 1px solid #eee; }
-        .footer-links strong { display: block; margin-bottom: 10px; color: #666; font-size: 0.9rem; }
-        .link-item { display: inline-block; margin: 5px 10px; color: #888; text-decoration: none; font-size: 14px; }
-        .link-item:hover { color: var(--light-green); }
+        .pagination-nav { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 50px; padding-top: 30px; border-top: 2px solid #f4f4f4; }
+        .page-link { padding: 8px 16px; border: 1px solid #ddd; border-radius: 6px; color: #555; text-decoration: none; font-size: 0.95rem; transition: all 0.2s; }
+        .page-link:hover { border-color: var(--accent-green, #128C7E); color: var(--accent-green, #128C7E); background: #fff; }
+        .page-active { padding: 8px 16px; background: var(--main-green, #075E54); color: #fff; border: 1px solid var(--main-green, #075E54); border-radius: 6px; font-weight: bold; font-size: 0.95rem; }
+        .page-disabled { padding: 8px 16px; color: #ccc; border: 1px solid #eee; border-radius: 6px; cursor: not-allowed; }
     </style>
-    
-    <!-- 51.la 统计组件继承 -->
-    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-    <script>LA.init({id:"3K7l95Zodr0uFrIN",ck:"3K7l95Zodr0uFrIN"})</script>
-</head>
-<body>
 
-    <header>
-        <div style="padding: 20px;"><a href="/">FinalShell技术支持</a></div>
-    </header>
-
-    <main class="list-container">
-        <h1>{{ title }}{% if pagination.pageNumber > 0 %} <small style="font-size: 1.1rem; color: #999;">(第 {{ pagination.pageNumber + 1 }} 页)</small>{% endif %}</h1>
-        
-        <!-- 文章列表循环体 -->
-        <div class="article-list">
-            {% for post in posts %}
-            <article class="article-item">
-                <h2 class="item-title">
-                    <a href="{{ post.url }}">{{ post.data.title }}</a>
-                </h2>
-                <div class="item-meta">
-                    {% if post.date %}
-                    <span>发布时间：{{ post.date.getFullYear() }}-{{ (post.date.getMonth()+1).toString().padStart(2, '0') }}-{{ post.date.getDate().toString().padStart(2, '0') }}</span>
-                    {% endif %}
-                </div>
-                <!-- 获取文章前120个字作为摘要，对蜘蛛建索引非常友好 -->
-                <div class="item-excerpt">
-                    {{ post.templateContent | striptags | truncate(120) }}
-                </div>
-            </article>
-            {% endfor %}
-        </div>
-
-        <!-- 分页导航（以 11ty/Eleventy 的标准分页语法为例） -->
-        <nav class="pagination-nav">
-            <!-- 上一页 -->
-            {% if pagination.href.previous %}
-                <a href="{{ pagination.href.previous }}" class="page-link">« 上一页</a>
-            {% else %}
-                <span class="page-disabled">« 上一页</span>
-            {% endif %}
-
-            <!-- 页码循环显示（如：1 2 3 ...） -->
-            {% for pageEntry in pagination.pages %}
-                {% if pageLoop.index0 == pagination.pageNumber %}
-                    <span class="page-active">{{ loop.index }}</span>
-                {% else %}
-                    <a href="{{ pagination.hrefs[loop.index0] }}" class="page-link">{{ loop.index }}</a>
+    <!-- 文章列表循环体 -->
+    <div class="article-list">
+        {% for post in posts %}
+        <article class="article-item">
+            <h2 class="item-title">
+                <a href="{{ post.url }}">{{ post.data.title }}</a>
+            </h2>
+            <div class="item-meta">
+                {% if post.date %}
+                <span>发布时间：{{ post.date.getFullYear() }}-{{ (post.date.getMonth()+1).toString().padStart(2, '0') }}-{{ post.date.getDate().toString().padStart(2, '0') }}</span>
                 {% endif %}
-            {% endfor %}
-
-            <!-- 下一页 -->
-            {% if pagination.href.next %}
-                <a href="{{ pagination.href.next }}" class="page-link">下一页 »</a>
-            {% else %}
-                <span class="page-disabled">下一页 »</span>
-            {% endif %}
-        </nav>
-
-        <!-- 站群随机互链 -->
-        <div class="footer-links">
-            <strong>推荐阅读</strong>
-            <div id="random-links-wrap">
-
             </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 40px; padding-bottom: 20px;">
-            <a href="/" style="color: #999; text-decoration: none; font-size: 0.9rem;">返回首页入口</a>
-        </div>
-    </main>
+            <div class="item-excerpt">
+                {{ post.templateContent | striptags | truncate(120) }}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
 
-</body>
-</html>
+    <!-- 分页导航 -->
+    <nav class="pagination-nav">
+        {% if pagination.href.previous %}
+            <a href="{{ pagination.href.previous }}" class="page-link">« 上一页</a>
+        {% else %}
+            <span class="page-disabled">« 上一页</span>
+        {% endif %}
+
+        {% for pageEntry in pagination.pages %}
+            {% if pagination.pageNumber == loop.index0 %}
+                <span class="page-active">{{ loop.index }}</span>
+            {% else %}
+                <a href="{{ pagination.hrefs[loop.index0] }}" class="page-link">{{ loop.index }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if pagination.href.next %}
+            <a href="{{ pagination.href.next }}" class="page-link">下一页 »</a>
+        {% else %}
+            <span class="page-disabled">下一页 »</span>
+        {% endif %}
+    </nav>
+</main>
