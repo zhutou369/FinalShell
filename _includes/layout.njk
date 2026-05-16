@@ -6,6 +6,32 @@
     <title>{{ title }} - FinalShell下载</title>
     <meta name="keywords" content="SSH工具, FinalShell下载, Linux服务器管理, 远程桌面, 终端模拟器">
     <style>
+/* 🌟 核心修复 1：防止文字、长链接、长英文单词撑破白底容器 */
+.article-body {
+    font-size: 1.1rem;
+    color: #444;
+    text-align: justify;
+    word-break: break-word;     /* 允许在长单词或 URL 内部换行 */
+    overflow-wrap: break-word;  /* 响应式溢出包裹 */
+    word-wrap: break-word;
+}
+
+/* 🌟 核心修复 2：强制固定图片大小，100% 严丝合缝卡在白底容器内，绝不越界 */
+.article-body img {
+    max-width: 100% !important; /* 图片最大宽度不能超过它的父级容器 */
+    height: auto !important;    /* 高度自动等比例缩放，防止图片变形 */
+    display: block;             /* 独占一行排版 */
+    margin: 20px auto;          /* 上下留出间距，且居中对齐 */
+    border-radius: 6px;         /* 顺便加个圆角让它更美观 */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* 轻微阴影提升质感 */
+}
+
+/* 🌟 核心修复 3：防止 Gemini 生成的 markdown 代码块（pre/code）横向溢出 */
+.article-body pre, .article-body code {
+    max-width: 100% !important;
+    white-space: pre-wrap !important; /* 代码太长时自动折行，而不是产生横向滚动条 */
+    word-break: break-all !important;
+}
         /* 页面基础样式 */
         :root { --main-green: #075E54; --accent-green: #128C7E; --light-green: #25D366; --bg-gray: #f0f2f5; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.8; color: #333; margin: 0; background: var(--bg-gray); }
