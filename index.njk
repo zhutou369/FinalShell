@@ -161,17 +161,18 @@ title: FinalShell 官方下载 | 强大的 SSH 客户端
     </article>
 
     <aside class="sidebar">
-        <h3>最新文章更新</h3>
-        <ul class="post-list">
-            {# 通过使用 slice(0, 5) 完美控制首页侧边栏仅展示最新的5篇文章 #}
-            {% for post in collections.blog | reverse | slice(0, 5) %}
-            <li class="post-item">
-                <a href="{{ post.url }}">{{ post.data.title }}</a>
-            </li>
-            {% else %}
-            <li class="post-item" style="color: #64748b;">暂无内容更新</li>
-            {% endfor %}
-        </ul>
+<h3>最新文章更新</h3>
+<ul class="post-list">
+    {# 使用你配置里注册好的 dateFilter，配合 slice(0, 5) 安全切片 #}
+    {% for post in collections.blog | reverse | slice(0, 5) %}
+    <li class="post-item">
+        <a href="{{ post.url }}">{{ post.data.title }}</a>
+        <span class="post-meta">{{ post.date | dateFilter }}</span>
+    </li>
+    {% else %}
+    <li class="post-item" style="color: #64748b;">暂无内容更新</li>
+    {% endfor %}
+</ul>
 
         <!-- 新增：引导蜘蛛和用户去列表页的核心入口，增强内链传递 -->
         <a href="/blog/" class="more-articles-btn">查看更多教程 &raquo;</a>
