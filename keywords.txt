@@ -75,7 +75,7 @@ FinalShell 怎么批量修改几十台服务器的共同登录密码
 告别卡顿：FinalShell 在高延迟海外服务器下的优化技巧
 FinalShell 的云端同步功能怎么用？多设备无缝切换
 怎么用 FinalShell 快速追踪服务器网络路由（Traceroute 功能）
-FinalShell 下的 SFTP 文件权限（chmod 755/644）修改教程
+FinalShell 下下的 SFTP 文件权限（chmod 755/644）修改教程
 FinalShell 全局搜索功能：快速在数百台主机中定位目标服务器
 终端分屏：FinalShell 支不支持类似 tmux 的分屏操作？
 FinalShell 处理超大日志文件（数G大小）时的性能表现与应对
@@ -136,7 +136,7 @@ FinalShell 在 Windows 11 系统的兼容性与日常使用体验分享
 替代 FinalShell：几款带有炫酷 UI 的开源现代化终端工具（如 Tabby）
 为什么说 FinalShell 附带的 SFTP 功能极大地提高了运维效率
 独立站长选工具：宝塔面板自带终端与 FinalShell 本地客户端对比
-为什么国内开发者更偏爱 FinalShell 的实时硬件监控面板
+为什么国内开发者更偏爱 FinalShell 的实时 hardware 监控面板
 深度揭秘 FinalShell 的云端同步，安全合规性到底让人放心吗？
 省下几百块：FinalShell 免费版搭配开源路由工具实现高级版加速
 从小白到资深运维：FinalShell 伴随我建站3年的真实心得分享
