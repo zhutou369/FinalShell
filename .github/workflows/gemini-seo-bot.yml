@@ -1,9 +1,10 @@
 name: Gemini Auto Content Updater
+
 on:
-  # 🎯 设定在北京时间 16:49 分准时自动触发测试
+  # 🎯 设定在北京时间 17:03 分准时自动触发测试
   schedule:
-    - cron: '59 8 * * *'
-  workflow_dispatch: # 保持手动触发按钮可用
+    - cron: '03 9 * * *'
+  workflow_dispatch:
 
 # 🚀 2026 规范：在全局显式注入强制使用 Node 24 的环境变量
 env:
