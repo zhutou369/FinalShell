@@ -1,40 +1,38 @@
 ---
 title: FinalShell 技术支持与教程
 layout: layout.njk
+# 🎯 修复点 1：专门为 FinalShell 列表页补充独立的元描述摘要，避免由于继承外壳导致描述空缺
+description: "精选 FinalShell 官方下载技术支持与高级教程索引大厅。提供成套的远程 SSH 秘钥配置、多标签终端管理、自研 SFTP 传输加速防断线技巧等全量优质技术文章列表。"
 pagination:
   data: collections.blog
   size: 10
   alias: posts
   reverse: true
-# 🎯 核心修复：根据当前页码动态分配路径，彻底解决多页面输出冲突
+# 根据当前页码动态分配路径，彻底解决多页面输出冲突
 permalink: "blog/{% if pagination.pageNumber > 0 %}page-{{ pagination.pageNumber }}/{% endif %}index.html"
 ---
 
-<!-- 
-   注意：因为使用了 layout: layout.njk，母版会自动生成 head、header 和 body 大框架。
-   这里我们只需要专注输出列表页的核心包裹器即可，样式会自动继承或补充。
--->
 <main class="list-container" style="max-width: 900px; margin: 0 auto; padding: 10px 0;">
     
-    <!-- 动态提示当前页码（只在第2页及以后显示），SEO 非常友好 -->
+    <h1 style="display: none;">{{ title }}核心教程知识库</h1>
+
     {% if pagination.pageNumber > 0 %}
         <div style="color: #999; margin-bottom: 20px; font-size: 0.9rem;">
             当前位置：<a href="/" style="color: #666; text-decoration: none;">首页</a> &gt; <a href="/blog/" style="color: #666; text-decoration: none;">文章列表</a> &gt; 第 {{ pagination.pageNumber + 1 }} 页
         </div>
     {% endif %}
 
-    <!-- 文章列表布局样式 -->
     <style>
         .article-list { display: flex; flex-direction: column; gap: 25px; margin-top: 20px; }
         .article-item { 
-            padding: 20px; 
+            padding: 20px;
             border-radius: 8px; 
             background: #f8f9fa; 
             border-left: 4px solid transparent;
             transition: all 0.3s ease;
         }
         .article-item:hover { 
-            background: #fff; 
+            background: #fff;
             border-left-color: var(--accent-green, #128C7E); 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             transform: translateX(4px);
@@ -53,7 +51,6 @@ permalink: "blog/{% if pagination.pageNumber > 0 %}page-{{ pagination.pageNumber
         .page-disabled { padding: 8px 16px; color: #ccc; border: 1px solid #eee; border-radius: 6px; cursor: not-allowed; }
     </style>
 
-    <!-- 文章列表循环体 -->
     <div class="article-list">
         {% for post in posts %}
         <article class="article-item">
@@ -72,7 +69,6 @@ permalink: "blog/{% if pagination.pageNumber > 0 %}page-{{ pagination.pageNumber
         {% endfor %}
     </div>
 
-    <!-- 分页导航 -->
     <nav class="pagination-nav">
         {% if pagination.href.previous %}
             <a href="{{ pagination.href.previous }}" class="page-link">« 上一页</a>
