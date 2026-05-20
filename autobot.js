@@ -141,13 +141,15 @@ async function runAutoBot() {
     title: "${currentTopic}"
     description: "针对${currentTopic}的专业技术解析与实操指南。"
     date: ${todayStr}
-    tags: ["posts", "SEO"]
+    tags: ["blog", "SEO"]
     layout: "layout.njk"
-    permalink: "/posts/${todayStr}-"你的纯英文短语"-${randomId}/index.html"
+    permalink: "/blog/${todayStr}-"你的纯英文短语"-${randomId}/index.html"
     ---
 
     【注意】：请务必将上面 permalink 里面的 "你的纯英文短语" 替换为你真正翻译出来的英文 Slug。不要保留引号。
     ${imagePromptInstruction}
+
+    5. ⚠️【特别限制】：严禁在正文的第一行或任何地方生成 # 标题（即一级的 <h1> 标签）。文章正文必须直接从第一个二级标题（##）或引导段落开始撰写，防止与母版外壳的标题产生 SEO 重复冲突。
 
     这里开始写文章正文。请多用二级标题（##）、三级标题（###）对内容进行多层级切分，保证极佳的SEO可读性与结构性。
         `;
@@ -189,4 +191,5 @@ async function runAutoBot() {
     }
 }
 
+// 🌟 核心修復：正確閉合 runAutoBot 本體函數並執行調用（移除了多餘的外層大括號）
 runAutoBot();
