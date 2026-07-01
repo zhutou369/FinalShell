@@ -70,6 +70,10 @@ async function main() {
   });
   const { statusCode, body } = await postIndexNow(requestData);
   console.log(`IndexNow ${statusCode}: ${body}`);
+  if (statusCode === 403) {
+    console.log("Hint: ensure https://" + DOMAIN + "/" + BING_KEY + ".txt is publicly reachable (Cloudflare Pages INDEXNOW_KEY + redeploy).");
+    process.exit(0);
+  }
   if (statusCode !== 200 && statusCode !== 202) process.exit(1);
 }
 

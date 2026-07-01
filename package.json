@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "node ./node_modules/@11ty/eleventy/cmd.cjs",
+    "build": "node tools/write-indexnow-key.js && node ./node_modules/@11ty/eleventy/cmd.cjs && node tools/write-indexnow-key.js",
     "postprocess": "node tools/mark-generated.js && node tools/fix-bing-images.js && node tools/add-internal-links.js"
   },
   "devDependencies": {

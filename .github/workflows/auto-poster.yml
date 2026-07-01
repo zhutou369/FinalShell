@@ -44,15 +44,29 @@ jobs:
       run: npm run postprocess
 
     - name: Build Eleventy Site
-      run: npm run build
+      env:
+        INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        BING_SITE_AUTH: ${{ secrets.BING_SITE_AUTH }}
+      run: |
+        if [ -n "$BING_SITE_AUTH" ]; then
+          printf '<?xml version="1.0"?>\n<users>\n  <user>%s</user>\n</users>\n' "$BING_SITE_AUTH" > ./BingSiteAuth.xml
+        fi
+        npm run build
 
     - name: Commit and Push Changes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
       run: |
         git config --global user.name "Gemini-Content-Bot"
         git config --global user.email "bot@finalshell-cn.com"
         git add posts/ keywords.json
+        if [ -n "$INDEXNOW_KEY" ] && [ -f "./${INDEXNOW_KEY}.txt" ]; then
+          git add "./${INDEXNOW_KEY}.txt"
+        fi
+        if [ -f ./BingSiteAuth.xml ]; then
+          git add ./BingSiteAuth.xml
+        fi
         if ! git diff --cached --quiet; then
           git commit -m "🤖 [Bot] 自动更新文章并同步词库"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
@@ -60,7 +74,11 @@ jobs:
           echo "无新变化，跳过推送"
         fi
 
+    - name: Wait for site deploy
+      run: sleep 90
+
     - name: Bing IndexNow Push
+      continue-on-error: true
       env:
         INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         BING_DOMAIN: finalshell-cn.com
