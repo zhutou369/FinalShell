@@ -44,7 +44,7 @@ jobs:
       run: npm run postprocess
 
     - name: Build Eleventy Site
-      run: npx @11ty/eleventy
+      run: npm run build
 
     - name: Commit and Push Changes
       env:

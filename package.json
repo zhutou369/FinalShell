@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "eleventy",
+    "build": "node ./node_modules/@11ty/eleventy/cmd.cjs",
     "postprocess": "node tools/mark-generated.js && node tools/fix-bing-images.js && node tools/add-internal-links.js"
   },
   "devDependencies": {
