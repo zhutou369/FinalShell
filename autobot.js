@@ -92,7 +92,7 @@ async function runAutoBot() {
                 const allImages = fs.readFileSync(imagesPath, 'utf-8')
                     .split(/\r?\n/)
                     .map(line => line.trim().replace(/^\s*/i, '')) 
-                    .filter(line => line.length > 0 && line.startsWith('http'));
+                    .filter(line => line.length > 0 && (line.startsWith('/static/images/') || line.startsWith('http')));
 
                 if (allImages.length >= 2) {
                     const shuffled = allImages.sort(() => 0.5 - Math.random());
@@ -130,28 +130,35 @@ async function runAutoBot() {
 
         // 7. 构造终极 SEO Prompt 模板
         const prompt = `
-    你是一个精通技术SEO和前沿网络技术的专家博主。请针对主题 "${currentTopic}" 撰写一篇深入、对用户有极高价值的原创文章。
+    你是一个熟悉 Linux 运维与 SSH 工具的简体中文技术博主。请针对主题 "${currentTopic}" 撰写一篇原创、可操作的教程文章。
+    
+    【站点定位】finalshell-cn.com 中文下载站，与 finalshell-ssh.com 内容需有区分，标题勿与常见 pillar 教程雷同。
     
     【重要核心要求】：
-    1. 请将本次的主题 "${currentTopic}" 翻译为一个干净、地道、用连字符隔开的【纯英文短语】，作为 URL 的别名（Slug）。
-    2. 字数严格控制在 1200 - 2000 字之间，多用结构化列表、二级标题（##）、三级标题（###）。
-    3. 严格按以下 Markdown 格式输出头部元数据，禁止在最外层包含 \`\`\`markdown 包裹外壳，必须直接以 --- 开头：
+    1. 将主题翻译为干净、连字符分隔的【纯英文 slug】作为 URL 别名。
+    2. 字数 1200～1800 字，用 ## / ### 分节，至少一节「## 常见问题」。
+    3. 正文禁止出现 # 一级标题；直接从段落或 ## 二级标题开始。
+    4. 在正文自然插入 2～3 条本站内链（锚文本用中文描述），优先链到：
+       /posts/cn-finalshell-official-download-channel/
+       /posts/cn-finalshell-windows-install-setup/
+       /posts/cn-finalshell-first-server-connection/
+       /posts/cn-finalshell-ssh-keypair-login/
+       /posts/cn-finalshell-sftp-drag-upload/
+       /posts/cn-finalshell-connect-timeout-fix/
+    5. 严格按以下 Markdown 头部输出，直接以 --- 开头，禁止 \`\`\`markdown 包裹：
 
     ---
     title: "${currentTopic}"
-    description: "针对${currentTopic}的专业技术解析与实操指南。"
+    description: "围绕${currentTopic}的实操步骤与注意事项，面向简体中文用户。"
     date: ${todayStr}
-    tags: ["blog", "SEO"]
+    tags: ["参考文章", "FinalShell"]
+    generated: true
     layout: "layout.njk"
-    permalink: "/blog/${todayStr}-"你的纯英文短语"-${randomId}/index.html"
+    permalink: "/posts/${todayStr}-"你的纯英文短语"-${randomId}/index.html"
     ---
 
-    【注意】：请务必将上面 permalink 里面的 "你的纯英文短语" 替换为你真正翻译出来的英文 Slug。不要保留引号。
+    【注意】permalink 中 "你的纯英文短语" 替换为真实 slug，不要保留引号。
     ${imagePromptInstruction}
-
-    5. ⚠️【特别限制】：严禁在正文的第一行或任何地方生成 # 标题（即一级的 <h1> 标签）。文章正文必须直接从第一个二级标题（##）或引导段落开始撰写，防止与母版外壳的标题产生 SEO 重复冲突。
-
-    这里开始写文章正文。请多用二级标题（##）、三级标题（###）对内容进行多层级切分，保证极佳的SEO可读性与结构性。
         `;
 
         try {

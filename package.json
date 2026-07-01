@@ -1,14 +1,11 @@
 {
-  "name": "my-11ty-site",
+  "name": "finalshell-cn",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "eleventy",
+    "postprocess": "node tools/mark-generated.js && node tools/fix-bing-images.js && node tools/add-internal-links.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@11ty/eleventy": "^3.1.5"
   },

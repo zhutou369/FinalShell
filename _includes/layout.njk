@@ -3,10 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - FinalShell下载</title>
-    <meta name="keywords" content="SSH工具, FinalShell下载, Linux服务器管理, 远程桌面, 终端模拟器">
-    
-    <meta name="description" content="{{ description or '提供业界领先的FinalShell技术支持与深度运维指南。涵盖SSH远程连接配置、高吞吐SFTP文件加速传输、实时服务器心跳监控等核心实操教程。' }}">
+    <title>{% if title %}{{ title }} - {{ site.brand }}{% else %}{{ site.title }}{% endif %}</title>
+    <meta name="keywords" content="{{ site.keywords }}">
+    <meta name="description" content="{{ description or site.description }}">
+    <link rel="canonical" href="{{ canonicalUrl }}">
+    {% if noindex %}<meta name="robots" content="noindex,follow">{% else %}<meta name="robots" content="index,follow">{% endif %}
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:site_name" content="{{ site.brand }}">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ description or site.description }}">
+    <meta property="og:url" content="{{ canonicalUrl }}">
+    <meta property="og:image" content="{{ site.url }}{{ site.ogImage | assetUrl }}">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": {{ title | dump | safe }},
+      "description": {{ (description or site.description) | dump | safe }},
+      "datePublished": "{{ date | htmlDateString }}",
+      "inLanguage": "zh-CN",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": {{ canonicalUrl | dump | safe }} },
+      "publisher": { "@type": "Organization", "name": {{ site.brand | dump | safe }} }
+    }
+    </script>
     
     <style>
         /* 🌟 核心修复 1：防止文字、长链接、长英文单词撑破白底容器 */
