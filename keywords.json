@@ -1,5 +1,4 @@
 [
-  "FinalShell 本地端口转发实现远程访问内网数据库（MySQL/Redis）",
   "提升安全性：如何在 FinalShell 中配置双因子认证（2FA/Google 验证码）",
   "FinalShell 怎么批量修改几十台服务器的共同登录密码",
   "告别卡顿：FinalShell 在高延迟海外服务器下的优化技巧",
